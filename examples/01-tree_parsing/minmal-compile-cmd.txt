@@ -1,0 +1,3 @@
+g++ -I. -I../../include  -c -o example-example.o example.cxx
+../../libtool   --verbose --mode=link g++ -o example example.o ../../src/.libs/libxmlwrapp.la
+g++ -o example example.o  ../../src/.libs/libxmlwrapp.so -Wl,-rpath -Wl,/home/baic/.local/lib

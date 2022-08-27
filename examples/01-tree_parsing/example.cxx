@@ -1,11 +1,11 @@
 /*
  * Copyright (C) 2001-2003 Peter J Jones (pjones@pmade.org)
  * All Rights Reserved
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
  *    notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
@@ -15,7 +15,7 @@
  * 3. Neither the name of the Author nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
@@ -40,32 +40,31 @@
 #include <xmlwrapp/xmlwrapp.h>
 
 // standard includes
-#include <iostream>
 #include <exception>
+#include <iostream>
 
-int main (int argc, char *argv[]) {
-    if (argc != 2) {
-	std::cerr << argv[0] << ": you must give one and only one XML file name\n";
-	return 1;
+int main(int argc, char* argv[]) {
+  if (argc != 2) {
+    std::cerr << argv[0] << ": you must give one and only one XML file name\n ";
+    return 1;
+  }
+
+  try {
+    xml::tree_parser parser(argv[1]);
+
+    auto& root = parser.get_document().get_root_node();
+
+    std::cout << "root node is '" << root.get_name() << "'\n";
+
+    for (auto const& child : root) {
+      if (!child.is_text())
+        std::cout << "child node '" << child.get_name() << "'\n";
     }
 
-    try {
+  } catch (std::exception& e) {
+    std::cerr << argv[0] << ": " << e.what() << "\n";
+    return 1;
+  }
 
-	xml::tree_parser parser(argv[1]);
-
-	xml::node &root = parser.get_document().get_root_node();
-	std::cout << "root node is '" << root.get_name() << "'\n";
-
-	xml::node::const_iterator child(root.begin()), child_end(root.end());
-	for (; child != child_end; ++child) {
-	    if (child->is_text()) continue;
-	    std::cout << "child node '" << child->get_name() << "'\n";
-	}
-
-    } catch (std::exception &e) {
-	std::cerr << argv[0] << ": " << e.what() << "\n";
-	return 1;
-    }
-
-    return 0;
+  return 0;
 }
